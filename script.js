@@ -1,3 +1,8 @@
+//ask user for their name
+//get top 40 songs
+//play preview for those songs
+//countdown to begin next song 3,2,1 GUESS IT
+
 function Song(options) {
     this.title = options.title; //string
     this.author = options.author; //string
@@ -44,21 +49,17 @@ Game.prototype.nextSong = function() {
     return this.songs[(this.roundCount + 1) % this.songs.length];
 }
 
-// Round.prototype.checkGuess = function() {
-//     return this.round.song.title === $('#song-guess').val();
-// }
-
 Game.prototype.checkGuess = function(){
-  console.log('this is', this)
   return this.round.song.title === $('#song-guess').val();
 }
 
-function nextRound(song) {
-    //****
-}
-
-function setPlayer(player) {
-
+Game.prototype.handleRound = function(){
+  if(this.round.song.title === $('#song-guess').val()){
+    $('#song-guess').val('');
+    this.round.player.score ++;
+    this.buildRound();
+    console.log("hey that's right! your score is ", this.round.player.score);//WINNER
+  }
 }
 
 $(document).ready(function() {
@@ -68,7 +69,12 @@ $(document).ready(function() {
         author: "spice girls",
         duration: 100
     });
-    var myGame = new Game([brandon], [testSong]);
+    var testSong2 = new Song({
+        title: "toxic",
+        author: "thebrit",
+        duration: 100
+    });
+    var myGame = new Game([brandon], [testSong, testSong2]);
     myGame.buildRound();
-    $(document).on('click', myGame.checkGuess)
+    $(document).on('keyup', myGame.handleRound.bind(myGame));
 });
