@@ -1,0 +1,35 @@
+
+/* RGB */
+/*rgba(12, 8, 2, 1);
+rgba(187, 68, 48, 1);
+rgba(229, 249, 224, 1);
+rgba(202, 254, 72, 1);
+rgba(127, 244, 139, 1);*/
+
+#container{
+  text-align: center;
+}
+::-webkit-input-placeholder {
+   text-align: center;
+}
+#score{
+  font-size: 1.5em;
+  font-weight: 100;
+  color: rgba(202, 254, 72, 1);
+}
+#visualizer{
+  background-color:
+}
+body{
+  background-color: rgba(200, 88, 68, 1);
+}
+h1{
+  margin: 10vh 0;
+  font-weight: 200;
+  color: rgba(127, 244, 139, 1);
+}
+
+input{
+  width: 80vw;
+  border-radius: 10px;
+}

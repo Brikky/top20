@@ -1,0 +1,74 @@
+function Song(options) {
+    this.title = options.title; //string
+    this.author = options.author; //string
+    this.duration = options.duration; //int
+};
+
+function Player(name = "") {
+    this.name = name;
+    this.guess = "";
+    this.score = 0;
+};
+
+function Game(playerObjectArray, songObjectArray) {
+    this.roundCount = 0;
+    this.players = playerObjectArray;
+    this.songs = songObjectArray;
+    this.round = {};
+};
+
+function Round(playerObject, songObject) {
+    this.player = playerObject;
+    this.song = songObject;
+}
+
+Game.prototype.buildRound = function() {
+    var round = new Round(this.currentPlayer(), this.currentSong());
+    this.roundCount++;
+    this.round = round;
+}
+
+Game.prototype.currentPlayer = function() {
+    return this.players[this.roundCount % this.players.length];
+}
+
+Game.prototype.nextPlayer = function() {
+    return this.players[(this.roundCount + 1) % this.players.length];
+}
+
+Game.prototype.currentSong = function() {
+    return this.songs[this.roundCount % this.songs.length];
+}
+
+Game.prototype.nextSong = function() {
+    return this.songs[(this.roundCount + 1) % this.songs.length];
+}
+
+// Round.prototype.checkGuess = function() {
+//     return this.round.song.title === $('#song-guess').val();
+// }
+
+Game.prototype.checkGuess = function(){
+  console.log('this is', this)
+  return this.round.song.title === $('#song-guess').val();
+}
+
+function nextRound(song) {
+    //****
+}
+
+function setPlayer(player) {
+
+}
+
+$(document).ready(function() {
+    var brandon = new Player("brandon");
+    var testSong = new Song({
+        title: "tell me what you want",
+        author: "spice girls",
+        duration: 100
+    });
+    var myGame = new Game([brandon], [testSong]);
+    myGame.buildRound();
+    $(document).on('click', myGame.checkGuess)
+});
