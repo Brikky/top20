@@ -33,6 +33,10 @@ input {
     display: block;
     margin: 2vh auto;
 }
+#song-name{
+  font-size: 1.25em;
+  color: rgba(229, 249, 224, 1);
+}
 
 /*BUTON*/
 
