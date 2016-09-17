@@ -1,9 +1,5 @@
-//ask user for their name
-//get top 40 songs
-//play preview for those songs
-//countdown to begin next song 3,2,1 GUESS IT
 //end game logic
-//alert player of correct
+//    store score in local memory
 //include download/play/buy button
 
 var myGame = new Game();
@@ -33,28 +29,33 @@ function Game(playerObjectArray, songObjectArray) {
     this.players = playerObjectArray || [];
     this.songs = songObjectArray || [];
     this.winStatements = ["You got it!",
-    "Watch out, Adele!",
-    "I thought it was The Beatles...",
-    "Keep it going!",
-    "Highest score EVER?",
-    "Lightning Round!",
-    "That's my favorite song!",
-    "Rockstar!",
-    "Notice me Senpai.",
-    "Call 911! 'Cuz you are on FIRE",
-    "You're my hero.",
-    "Making Beyonce proud!",
-    "Grand Prize!",
-    "That one took me a second.",
-    "OK. But can you get the next one?",
-    "I bet you make babies smile.",
-    "Stylin'!",
-    "DANCE BREAK",
-    "Me 'What's your number?' You: 'Number 1.'"]
+        "Watch out, Adele!",
+        "I thought it was The Beatles...",
+        "Keep it going!",
+        "Highest score EVER?",
+        "Lightning Round!",
+        "That's my favorite song!",
+        "Rockstar!",
+        "Notice me Senpai.",
+        "Call 911! 'Cuz you are on FIRE",
+        "You're my hero.",
+        "Making Beyonce proud!",
+        "Grand Prize!",
+        "That one took me a second.",
+        "OK. But can you get the next one?",
+        "I bet you make babies smile.",
+        "Stylin'!",
+        "DANCE BREAK",
+        "Me 'What's your number?' You: 'Number 1.'"
+    ]
 };
 
+//GAME METHODS
 Game.prototype.currentPlayer = function() {
     return this.players[this.roundCount % this.players.length];
+}
+Game.prototype.currentWinStatement = function() {
+    return this.winStatements[this.roundCount % this.winStatements.length];
 }
 
 Game.prototype.currentSong = function() {
@@ -66,9 +67,26 @@ Game.prototype.currentSongName = function() {
 
 Game.prototype.checkGuess = function() {
     if (this.players.length > 0) {
-        var punctuationRemovedSong = (this.currentSongName()).replace(/[^\w\s]|_/g, ""); //removes punctuation
-        var punctuationRemovedGuess = ($('#song-guess').val()).replace(/[^\w\s]|_/g, "");
-        return (new RegExp(punctuationRemovedSong, "i").test(punctuationRemovedGuess)); //ignores case
+        var cleanedSong = (this.currentSongName()).replace(/[^\w\s]|_/g, ""); //removes punctuation
+        cleanedSong = cleanedSong.replace(/feat. *$/, "") //removes anything after "feat. "
+        var cleanedGuess = ($('#song-guess').val()).replace(/[^\w\s]|_/g, "");
+        return (new RegExp(cleanedSong, "i").test(cleanedGuess)); //ignores case
+    }
+}
+
+Game.prototype.checkEnd = function() {
+    return this.roundCount == this.songs.length && this.roundCount > 0;
+}
+
+Game.prototype.endGame = function() {
+    if (this.checkEnd()) {
+        $("#song-name").html(this.currentWinStatement());
+        $("#song-element").attr("src", "#");
+        $("#song-guess").hide();
+        $("#restart").show();
+        $("#visualizer").hide();
+        clearInterval(endInterval);
+        clearInterval(timeInterval);
     }
 }
 
@@ -76,9 +94,8 @@ Game.prototype.handleRound = function() {
     if (this.players.length > 0) {
         this.roundTime = $.now() / 1000 - this.roundStart;
         if (this.checkGuess() && this.roundTime <= 30.0) {
-            this.currentPlayer()["score"]++;
-            $('#score-value').html(this.currentPlayer()["score"]); //WINNER
-            $("#song-name").html(this.winStatements[this.roundCount]);
+            (this.currentPlayer()).incrementScore(); //WINNER
+            $("#song-name").html(this.currentWinStatement());
             this.newRound();
         } else if (this.roundTime > 30.0) {
             this.newRound();
@@ -116,6 +133,22 @@ Game.prototype.isOverTime = function() {
         this.newRound();
     }
 }
+Game.prototype.resetGame = function(){
+  this.roundCount = 0;
+  $("#game-guess").show();
+  this.players.forEach(function(){this.resetScore()});
+}
+
+//PLAYER METHODS
+Player.prototype.incrementScore = function() {
+    this.score++;
+    $('#score-value').html(this.score);
+}
+
+Player.prototype.resetScore = function(){
+  this.score = 0;
+  $('#score-value').html(this.score);
+}
 
 Array.prototype.shuffle = function() { //Fisher-Yates (aka Knuth) Shuffle
     var currentIndex = this.length,
@@ -141,17 +174,20 @@ Array.prototype.shuffle = function() { //Fisher-Yates (aka Knuth) Shuffle
 
 //#########################################################
 $("#visualizer").hide();
+$("#restart").hide();
+var timeInterval = setInterval(myGame.isOverTime.bind(myGame), 100);
+var endInterval = setInterval(myGame.endGame.bind(myGame), 100);
 $(document).ready(function() {
     $("#start").on("click touchstart", myGame.prepareGame.bind(myGame));
-
     $(document).on('keyup', myGame.handleRound.bind(myGame));
-    setInterval(myGame.isOverTime.bind(myGame), 100);
+    $("#restart").on("click touchstart", function(){
+      window.location.reload();
+    });
+
 
     //
     // PLAYGROUND
     //
-
-
 
     //<--- /PLAYGROUND
 

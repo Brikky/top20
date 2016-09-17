@@ -26,12 +26,46 @@
         <div id="song-name">Songs will progress automatically, get ready!</div>
         <input id="song-guess" type="text" placeholder="enter your name">
         <div class="button" id="start">start!</div>
-        <div class="score">Highscore:
+        <div class="button" id="restart">play again</div>
+        <div class="score">Score:
             <h3 class="score" id="score-value">0</h3></div>
 
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.2/js/bootstrap.min.js" integrity="sha384-vZ2WRJMwsjRMW/8U7i6PWi6AlO1L79snBrmgiDpgIWJ82z8eA5lenwvxbMV1PAh7" crossorigin="anonymous"></script>
     </div>
+
+
+
+
+<div id="buttons">
+
+
+  
+
+    <!-- Twitter Follow & Share Buttons -->
+    <a href="https://twitter.com/imbrikky" class="twitter-follow-button" data-show-count="false">Follow @imbrikky</a>
+    <script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
+    <a href="https://twitter.com/share" class="twitter-share-button" data-show-count="false">Tweet</a>
+    <script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
+
+</div>
+
+<script>
+    window.twttr = (function(d, s, id) {
+        var js, fjs = d.getElementsByTagName(s)[0],
+            t = window.twttr || {};
+        if (d.getElementById(id)) return t;
+        js = d.createElement(s);
+        js.id = id;
+        js.src = "https://platform.twitter.com/widgets.js";
+        fjs.parentNode.insertBefore(js, fjs);
+        t._e = [];
+        t.ready = function(f) {
+            t._e.push(f);
+        };
+        return t;
+    }(document, "script", "twitter-wjs"));
+</script>
 </body>
 <script src="script.js" charset="utf-8"></script>
 
