@@ -3,6 +3,7 @@
 //play preview for those songs
 //countdown to begin next song 3,2,1 GUESS IT
 //end game logic
+//alert player of correct/skip
 var myGame = new Game();
 $.ajax({
     type: "GET",
@@ -25,7 +26,7 @@ function Player(name = "") {
 
 function Game(playerObjectArray, songObjectArray) {
     this.roundCount = 0;
-    this.roundStart = $.now()/1000;
+    this.roundStart = $.now() / 1000;
     this.roundTime = 0;
     this.players = playerObjectArray || [];
     this.songs = songObjectArray || [];
@@ -35,20 +36,11 @@ Game.prototype.currentPlayer = function() {
     return this.players[this.roundCount % this.players.length];
 }
 
-Game.prototype.nextPlayer = function() {
-    return this.players[(this.roundCount + 1) % this.players.length];
-}
-
 Game.prototype.currentSong = function() {
     return this.songs[this.roundCount % this.songs.length];
 }
 Game.prototype.currentSongName = function() {
     return this.currentSong()["name"];
-    console.log("current song ", this.currentSong()["name"])
-}
-
-Game.prototype.nextSong = function() {
-    return this.songs[(this.roundCount + 1) % this.songs.length];
 }
 
 Game.prototype.checkGuess = function() {
@@ -61,7 +53,7 @@ Game.prototype.checkGuess = function() {
 
 Game.prototype.handleRound = function() {
     if (this.players.length > 0) {
-      this.roundTime = $.now()/1000 - this.roundStart;
+        this.roundTime = $.now() / 1000 - this.roundStart;
         if (this.checkGuess() && this.roundTime <= 30.0) {
             this.currentPlayer()["score"]++;
             $('#score-value').html(this.currentPlayer()["score"]); //WINNER
@@ -74,7 +66,7 @@ Game.prototype.handleRound = function() {
 
 Game.prototype.newRound = function() {
     this.roundCount++;
-    this.roundStart = $.now()/1000;
+    this.roundStart = $.now() / 1000;
     $("#song-guess").val("");
     $("#song-element").attr("src", myGame.currentSong()["preview_url"]);
 
@@ -86,26 +78,45 @@ Game.prototype.prepareGame = function() {
     $("#song-guess").val("");
     $("#song-guess").attr("placeholder", "guess the song name");
     console.log('my game', myGame);
+    this.songs = this.songs.shuffle();
     $("#song-element").attr("src", this.currentSong()["preview_url"]);
     console.log(this.currentSong()["preview_url"])
-    this.roundStart = $.now()/1000;
+
+    this.roundStart = $.now() / 1000;
 }
 
-Game.prototype.isOverTime = function(){
-  if ($.now()/1000 - this.roundStart > 30.0) {
-    console.log(this.roundTime, 'interval check')
-      this.newRound();
+Game.prototype.isOverTime = function() {
+    if ($.now() / 1000 - this.roundStart > 30.0) {
+        console.log(this.roundTime, 'interval check')
+        $("#song-name").html("You missed '"+this.currentSongName()+"'");
+        this.newRound();
+    }
+}
+
+Array.prototype.shuffle = function(){ //Fisher-Yates (aka Knuth) Shuffle
+  var currentIndex = this.length, temporaryValue, randomIndex;
+
+  // While there remain elements to shuffle...
+  while (0 !== currentIndex) {
+
+    // Pick a remaining element...
+    randomIndex = Math.floor(Math.random() * currentIndex);
+    currentIndex -= 1;
+
+    // And swap it with the current element.
+    temporaryValue = this[currentIndex];
+    this[currentIndex] = this[randomIndex];
+    this[randomIndex] = temporaryValue;
   }
+
+  return this;
 }
-
-setInterval(myGame.isOverTime.bind(myGame), 1000);
-
 //#########################################################
 $(document).ready(function() {
     $("#start").on("click", myGame.prepareGame.bind(myGame));
 
     $(document).on('keyup', myGame.handleRound.bind(myGame));
-
+    setInterval(myGame.isOverTime.bind(myGame), 100);
 
 
 
