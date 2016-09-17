@@ -83,12 +83,12 @@ Game.prototype.prepareGame = function() {
     this.songs = this.songs.shuffle();
     $("#song-element").attr("src", this.currentSong()["preview_url"]);
     console.log(this.currentSong()["preview_url"])
-
+    $("#visualizer").show();
     this.roundStart = $.now() / 1000;
 }
 
 Game.prototype.isOverTime = function() {
-    if ($.now() / 1000 - this.roundStart > 30.0) {
+    if (this.players.length > 0 && $.now() / 1000 - this.roundStart > 30.0) {
         console.log(this.roundTime, 'interval check')
         $("#song-name").html("You missed '"+this.currentSongName()+"'");
         this.newRound();
@@ -114,6 +114,7 @@ Array.prototype.shuffle = function(){ //Fisher-Yates (aka Knuth) Shuffle
   return this;
 }
 //#########################################################
+$("#visualizer").hide();
 $(document).ready(function() {
     $("#start").on("click", myGame.prepareGame.bind(myGame));
 
@@ -122,7 +123,13 @@ $(document).ready(function() {
 
 
 
+//
+// PLAYGROUND
+//
 
+
+
+//<--- /PLAYGROUND
 
 });
 
