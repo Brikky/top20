@@ -142,7 +142,7 @@ Array.prototype.shuffle = function() { //Fisher-Yates (aka Knuth) Shuffle
 //#########################################################
 $("#visualizer").hide();
 $(document).ready(function() {
-    $("#start").on("start", myGame.prepareGame.bind(myGame));
+    $("#start").on("click touchstart", myGame.prepareGame.bind(myGame));
 
     $(document).on('keyup', myGame.handleRound.bind(myGame));
     setInterval(myGame.isOverTime.bind(myGame), 100);
