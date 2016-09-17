@@ -1,11 +1,12 @@
 /* RGB */
-
-
 /*rgba(12, 8, 2, 1);
 rgba(187, 68, 48, 1);
 rgba(229, 249, 224, 1);
 rgba(202, 254, 72, 1);
 rgba(127, 244, 139, 1);*/
+
+
+/*General*/
 
 #container {
     text-align: center;
@@ -17,9 +18,6 @@ rgba(127, 244, 139, 1);*/
     font-size: 1.5em;
     font-weight: 100;
     color: rgba(202, 254, 72, 1);
-}
-#visualizer {
-    background-color:
 }
 body {
     background-color: rgba(200, 88, 68, 1);
@@ -35,6 +33,9 @@ input {
     display: block;
     margin: 2vh auto;
 }
+
+/*BUTON*/
+
 .button {
     display: inline-block;
     background: rgba(127, 244, 139, 1);
@@ -51,39 +52,46 @@ input {
     box-shadow: 0px 37px 20px -2vh rgba(0, 0, 0, 0.2);
     transform: translate(0px, -1vh) scale(1.2);
 }
+
+/*VISUALIZER*/
+
 #visualizer {
     height: 20vh;
     width: 80vw;
-    position:static !important;
+    position: static !important;
     margin: 1px auto;
     position: absolute;
     transform: rotate(180deg);
+    text-align: center;
+}
+.equalizer, .equalizer::before, .equalizer::after {
+    animation: equalize 1.5s steps(25, end) 0s infinite;
 }
 .equalizer {
     position: relative;
     display: inline-block;
     width: 2.5vw;
-    background-color: rgba(202, 254, 72, 1);;
+    background-color: rgba(202, 254, 72, 1);
+    ;
     height: 2.5vmin;
-    margin: 2.75vw;
-    margin-bottom: 0;
-}
-.equalizer, .equalizer::before, .equalizer::after {
-    animation: equalize 1.5s steps(25, end) 0s infinite;
-}
-.equalizer::before, .equalizer::after {
-    content: '';
-    position: absolute;
-    margin: 0 1.5vw;
-    height: 17.5vmin;
-    width: 2.5vw;
-    background-color: rgba(127, 244, 139, 1);
+    margin: 2.25vw;
 }
 .equalizer::before {
+    content: '';
+    position: absolute;
+    margin: 0 1.25vw;
+    height: 17.5vmin;
+    width: 2.5vw;
+    background-color: rgba(244, 244, 139, 1);
     animation-name: equalize2;
 }
 .equalizer::after {
-    left: 4vw;
+    content: '';
+    position: absolute;
+    margin: 0 -3.75vw;
+    height: 17.5vmin;
+    width: 2.5vw;
+    background-color: rgba(127, 244, 139, 1);
     animation-name: equalize3;
 }
 @keyframes equalize {
