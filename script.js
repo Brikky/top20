@@ -3,7 +3,8 @@
 //play preview for those songs
 //countdown to begin next song 3,2,1 GUESS IT
 //end game logic
-//alert player of correct/skip
+//alert player of correct
+//include download/play/buy button
 var myGame = new Game();
 $.ajax({
     type: "GET",
@@ -76,6 +77,7 @@ Game.prototype.prepareGame = function() {
     this.players.push(new Player($("#song-guess").val()));
     $("#start").hide();
     $("#song-guess").val("");
+      $("#song-guess").focus();
     $("#song-guess").attr("placeholder", "guess the song name");
     console.log('my game', myGame);
     this.songs = this.songs.shuffle();
