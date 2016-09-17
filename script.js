@@ -124,6 +124,7 @@ Game.prototype.prepareGame = function() {
     console.log(this.currentSong()["preview_url"])
     $("#visualizer").show();
     this.roundStart = $.now() / 1000;
+    $("#song-name").html("You have 30 seconds for each song.");
 }
 
 Game.prototype.isOverTime = function() {
