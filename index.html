@@ -16,13 +16,17 @@
 <body>
     <div id="container">
         <h1>Welcome to Top40!</h1>
+        <audio id="song-element" src="#" autoplay="true"></audio>
 
         <div id="visualizer"></div>
 
-        <input id="song-guess" type="text" placeholder="type song name here">
-        <input id = "current-song" type="hidden" value = "tell me what you want">
+        <input id="song-guess" type="text" placeholder="enter your name">
+        <div class="button" id="start">start!</div>
+        <input id="current-song" type="hidden" value="tell me what you want">
 
-        <div id="score">Highscore: </div>
+
+        <div class="score">Highscore:
+            <h3 class="score" id="score-value">0</h3></div>
 
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.2/js/bootstrap.min.js" integrity="sha384-vZ2WRJMwsjRMW/8U7i6PWi6AlO1L79snBrmgiDpgIWJ82z8eA5lenwvxbMV1PAh7" crossorigin="anonymous"></script>

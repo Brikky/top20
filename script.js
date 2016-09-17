@@ -2,11 +2,18 @@
 //get top 40 songs
 //play preview for those songs
 //countdown to begin next song 3,2,1 GUESS IT
+var myGame = new Game();
+$.ajax({
+  type: "GET",
+  url: "https://api.spotify.com/v1/search?q=year:2016&type=track",
+  success: function(spotifyJSON){
+    myGame.songs = spotifyJSON.tracks.items;
+  }
+})
 
 function Song(options) {
-    this.title = options.title; //string
-    this.author = options.author; //string
-    this.duration = options.duration; //int
+    this.name = options.name; //string
+    this.preview_url = options.url || options.preview_url; //string url
 };
 
 function Player(name = "") {
@@ -17,8 +24,8 @@ function Player(name = "") {
 
 function Game(playerObjectArray, songObjectArray) {
     this.roundCount = 0;
-    this.players = playerObjectArray;
-    this.songs = songObjectArray;
+    this.players = playerObjectArray || [];
+    this.songs = songObjectArray || [];
     this.round = {};
 };
 
@@ -57,24 +64,48 @@ Game.prototype.handleRound = function(){
   if(this.round.song.title === $('#song-guess').val()){
     $('#song-guess').val('');
     this.round.player.score ++;
+    $('#score-value').html(this.round.player.score);
     this.buildRound();
     console.log("hey that's right! your score is ", this.round.player.score);//WINNER
   }
 }
 
+function prepareGame(){
+  myGame.players.push(new Player($("#song-guess").val()));
+  $("#start").hide();
+  $("#song-guess").attr("placeholder", "guess the song name");
+  console.log('my game', myGame);
+  $("#song-element").attr("src", myGame.currentSong()["preview_url"]);
+  console.log(myGame.currentSong()["preview_url"])
+  $("#song-element").on("load", function() {
+            $("#song-element").Play();
+        }, true);
+}
+
+//#########################################################
 $(document).ready(function() {
-    var brandon = new Player("brandon");
-    var testSong = new Song({
-        title: "tell me what you want",
-        author: "spice girls",
-        duration: 100
+    $("#start").on("click", prepareGame)
+
+
+    $(document).on('keyup', function(){if(myGame.players.length>0){console.log("hi")}});
+
+
+
+
     });
-    var testSong2 = new Song({
-        title: "toxic",
-        author: "thebrit",
-        duration: 100
-    });
-    var myGame = new Game([brandon], [testSong, testSong2]);
-    myGame.buildRound();
-    $(document).on('keyup', myGame.handleRound.bind(myGame));
-});
+
+
+
+  //  myGame.buildRound();
+  //
+
+
+// var testSong = new Song({
+//     title: "tell me what you want",
+//     author: "spice girls",
+//     duration: 100
+// });
+// var testSong2 = new Song({
+//     title: "toxic",
+//     author: "thebrit",
+//     duration: 100

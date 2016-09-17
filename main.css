@@ -1,35 +1,53 @@
-
 /* RGB */
+
+
 /*rgba(12, 8, 2, 1);
 rgba(187, 68, 48, 1);
 rgba(229, 249, 224, 1);
 rgba(202, 254, 72, 1);
 rgba(127, 244, 139, 1);*/
 
-#container{
-  text-align: center;
+#container {
+    text-align: center;
 }
 ::-webkit-input-placeholder {
-   text-align: center;
+    text-align: center;
 }
-#score{
-  font-size: 1.5em;
-  font-weight: 100;
-  color: rgba(202, 254, 72, 1);
+.score {
+    font-size: 1.5em;
+    font-weight: 100;
+    color: rgba(202, 254, 72, 1);
 }
-#visualizer{
-  background-color:
+#visualizer {
+    background-color:
 }
-body{
-  background-color: rgba(200, 88, 68, 1);
+body {
+    background-color: rgba(200, 88, 68, 1);
 }
-h1{
-  margin: 10vh 0;
-  font-weight: 200;
-  color: rgba(127, 244, 139, 1);
+h1 {
+    margin: 10vh 0;
+    font-weight: 200;
+    color: rgba(127, 244, 139, 1);
 }
-
-input{
-  width: 80vw;
-  border-radius: 10px;
+input {
+    width: 80vw;
+    border-radius: 10px;
+    display: block;
+    margin: 2vh auto;
+}
+.button {
+    display: inline-block;
+    background: rgba(127, 244, 139, 1);
+    color: rgba(187, 68, 48, 1);
+    padding: 1vh 5vw;
+    border-radius: 5px;
+    box-shadow: 0px 17px 10px -10px rgba(0, 0, 0, 0.4);
+    cursor: pointer;
+    -webkit-transition: all ease-in-out 300ms;
+    transition: all ease-in-out 300ms;
+    margin: 5vh auto;
+}
+.button:hover {
+    box-shadow: 0px 37px 20px -2vh rgba(0, 0, 0, 0.2);
+    transform: translate(0px, -1vh) scale(1.2);
 }
