@@ -3,12 +3,12 @@
 ![Top 20 Game](http://i.imgur.com/usqRk5z.png)
 
 ##Technologies Used
-*HTML
-*CSS
-  *Animation w/ Keyframes
-*Javascript
-*Jquery
-*Spotify's Web API
+* HTML
+* CSS
+  * Animation w/ Keyframes
+* Javascript
+* Jquery
+* Spotify's Web API
 
 ##Future Work
 1. Allow players to pick a genre of music
