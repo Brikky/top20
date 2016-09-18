@@ -11,7 +11,6 @@
     <link rel="stylesheet" href="main.css" media="screen" title="no title">
 
     <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha256-cCueBR6CsyA4/9szpPfrX3s49M9vUU5BgtiJj06wt/s=" crossorigin="anonymous"></script>
-</head>
 
 <body>
     <div id="container">
@@ -19,15 +18,15 @@
         <audio id="song-element" src="#" autoplay="true"></audio>
 
         <div id="visualizer">
-          <div class="equalizer"></div>
-          <div class="equalizer"></div>
-          <div class="equalizer"></div>
-          <div class="equalizer"></div>
-          <div class="equalizer"></div>
-          <div class="equalizer"></div>
-          <div class="equalizer"></div>
-          <div class="equalizer"></div>
-          <div class="equalizer"></div>
+            <div class="equalizer"></div>
+            <div class="equalizer"></div>
+            <div class="equalizer"></div>
+            <div class="equalizer"></div>
+            <div class="equalizer"></div>
+            <div class="equalizer"></div>
+            <div class="equalizer"></div>
+            <div class="equalizer"></div>
+            <div class="equalizer"></div>
         </div>
         <div id="song-name">Songs will progress automatically, get ready!</div>
         <input id="song-guess" type="text" placeholder="enter your name">
@@ -43,35 +42,35 @@
 
 
 
-<div id="buttons">
+    <div id="buttons">
 
 
 
 
-    <!-- Twitter Follow & Share Buttons -->
-    <a href="https://twitter.com/imbrikky" class="twitter-follow-button" data-show-count="false">Follow @imbrikky</a>
-    <script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
-    <a href="https://twitter.com/share" class="twitter-share-button" data-show-count="false">Tweet</a>
-    <script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
+        <!-- Twitter Follow & Share Buttons -->
+        <a href="https://twitter.com/imbrikky" class="twitter-follow-button" data-show-count="false">Follow @imbrikky</a>
+        <script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
+        <a href="https://twitter.com/share" class="twitter-share-button" data-show-count="false">Tweet</a>
+        <script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
 
-</div>
+    </div>
 
-<script>
-    window.twttr = (function(d, s, id) {
-        var js, fjs = d.getElementsByTagName(s)[0],
-            t = window.twttr || {};
-        if (d.getElementById(id)) return t;
-        js = d.createElement(s);
-        js.id = id;
-        js.src = "https://platform.twitter.com/widgets.js";
-        fjs.parentNode.insertBefore(js, fjs);
-        t._e = [];
-        t.ready = function(f) {
-            t._e.push(f);
-        };
-        return t;
-    }(document, "script", "twitter-wjs"));
-</script>
+    <script>
+        window.twttr = (function(d, s, id) {
+            var js, fjs = d.getElementsByTagName(s)[0],
+                t = window.twttr || {};
+            if (d.getElementById(id)) return t;
+            js = d.createElement(s);
+            js.id = id;
+            js.src = "https://platform.twitter.com/widgets.js";
+            fjs.parentNode.insertBefore(js, fjs);
+            t._e = [];
+            t.ready = function(f) {
+                t._e.push(f);
+            };
+            return t;
+        }(document, "script", "twitter-wjs"));
+    </script>
 </body>
 <script src="script.js" charset="utf-8"></script>
 

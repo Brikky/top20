@@ -2,6 +2,22 @@
 //store score in local memory
 //include download/play/buy button
 
+function shake(elementID) {
+        var div = document.getElementById(elementID);
+        var interval = 100;
+        var distance = 10;
+        var times = 4;
+
+        $(div).css('position', 'relative');
+
+        for (var iter = 0; iter < (times + 1) ; iter++) {
+            $(div).animate({
+                left: ((iter % 2 == 0 ? distance : distance * -1))
+            }, interval);
+        }
+        $(div).animate({ left: 0 }, interval);
+    }
+
 //Song Constructor
 function Song(options) {
     this.name = options.name; //string
@@ -147,11 +163,14 @@ Game.prototype.prepareGame = function() {
 }
 
 //background function to check if time has exceeded 30 second allotment
-Game.prototype.isOverTime = function() {
+Game.prototype.checkTime = function() {
     if (this.players.length > 0 && $.now() / 1000 - this.roundStart > 30.0) {
-        console.log(this.roundTime, 'interval check')
         $("#song-name").html("You missed '" + this.currentSongName() + "'");
+        shake("song-name");
         this.newRound();
+    }
+    if (this.players.length > 0 && $.now() / 1000 - this.roundStart >25){
+        $("#song-name").html(30 - Math.trunc($.now()/1000 - this.roundStart));
     }
 }
 
@@ -214,7 +233,7 @@ $("#restart").hide();
 //Set background processes to check for user loss by timeout and by progression
 //This makes both of these processes occur independantly of user input despite
 //the game relying on event listeners for instantiation and winning progression
-var timeInterval = setInterval(myGame.isOverTime.bind(myGame), 100);
+var timeInterval = setInterval(myGame.checkTime.bind(myGame), 100);
 var endInterval = setInterval(myGame.endGame.bind(myGame), 100);
 
 
