@@ -2,6 +2,8 @@
 
 ![Top 20 Game](http://i.imgur.com/usqRk5z.png)
 
+## URL: [bitly.com/playtop20](bitly.com/playtop20)
+
 ##Technologies Used
 * HTML
 * CSS
