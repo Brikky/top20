@@ -8,9 +8,7 @@
 
 - HTML
 - CSS
-
   - Animation w/ Keyframes
-
 - Javascript
 - Jquery
 - Spotify's Web API
