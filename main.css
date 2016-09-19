@@ -76,7 +76,6 @@ input {
     width: 2.5vw;
     height: 2.5vh;
 }
-
 .equalizer:nth-child(3n+2) {
     background-color: rgba(127, 244, 139, 1);
     animation: equalize3 1.5s steps(25, end) 0s infinite;
@@ -85,7 +84,7 @@ input {
     background-color: rgba(244, 244, 139, 1);
     animation: equalize2 1.5s steps(25, end) 0s infinite;
 }
-.equalizer:nth-child(1),.equalizer:nth-child(4),.equalizer:nth-child(6),.equalizer:nth-child(9) {
+.equalizer:nth-child(1), .equalizer:nth-child(4), .equalizer:nth-child(6), .equalizer:nth-child(9) {
     background-color: rgba(202, 254, 72, 1);
     animation: equalize 1.5s steps(25, end) 0s infinite;
 }

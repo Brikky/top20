@@ -2,17 +2,21 @@
 
 ![Top 20 Game](http://i.imgur.com/usqRk5z.png)
 
-## URL: [bitly.com/playtop20](bitly.com/playtop20)
+## URL: <bitly.com/playtop20>
 
-##Technologies Used
-* HTML
-* CSS
-  * Animation w/ Keyframes
-* Javascript
-* Jquery
-* Spotify's Web API
+## Technologies Used
 
-##Future Work
+- HTML
+- CSS
+
+  - Animation w/ Keyframes
+
+- Javascript
+- Jquery
+- Spotify's Web API
+
+## Future Work
+
 1. Allow players to pick a genre of music
 2. Maintain high score over time
 3. Social sharing of scores

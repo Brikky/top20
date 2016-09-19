@@ -108,7 +108,7 @@ Game.prototype.currentSongName = function() {
 Game.prototype.checkGuess = function() {
     if (this.players.length > 0) {
         var cleanedSong = (this.currentSongName()).replace(/\s*\(.*?\)\s*/g, '')
-        //removes secondary song titles in parenthesis
+            //removes secondary song titles in parenthesis
         cleanedSong = (cleanedSong).replace(/[^\w\s]|_/g, "");
         var cleanedGuess = ($('#song-guess').val()).replace(/[^\w\s]|_/g, "");
         //removes punctuation
