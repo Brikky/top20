@@ -116,6 +116,7 @@ Game.prototype.checkGuess = function() {
         //removes anything after "feat. "
         cleanedSong = cleanedSong.trim();
         //removes leading and trailing whitespace
+        console.log(cleanedSong);
         return (new RegExp(cleanedSong, "i").test(cleanedGuess));
         //ignores case
     }
