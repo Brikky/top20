@@ -2,6 +2,7 @@
 //store score in local memory
 //include download/play/buy button
 
+//animation functions
 function shake(elementID) {
     var div = document.getElementById(elementID);
     var interval = 100;
@@ -53,6 +54,7 @@ function Player(name = "") {
 
 //Game Constructor
 function Game(playerObjectArray, songObjectArray) {
+    this.roundLength = 30;
     this.roundCount = 0;
     this.roundStart = $.now() / 1000;
     this.roundTime = 0;
@@ -148,12 +150,12 @@ Game.prototype.endGame = function() {
 Game.prototype.handleRound = function() {
     if (this.players.length > 0) {
         this.roundTime = $.now() / 1000 - this.roundStart;
-        if (this.checkGuess() && this.roundTime <= 30.0) {
+        if (this.checkGuess() && this.roundTime <= this.roundLength) {
             (this.currentPlayer()).incrementScore(); //WINNER
             $("#song-name").html(this.currentWinStatement());
             bounce("song-name");
             this.newRound();
-        } else if (this.roundTime > 30.0) {
+        } else if (this.roundTime > this.roundLength) {
             this.newRound();
         }
     }
@@ -181,18 +183,18 @@ Game.prototype.prepareGame = function() {
     $("#song-element").attr("src", this.currentSong()["preview_url"]);
     $("#visualizer").show();
     this.roundStart = $.now() / 1000;
-    $("#song-name").html("You have 30 seconds for each song.");
+    $("#song-name").html("You have " + this.roundLength + " seconds for each song.");
 }
 
 //background function to check if time has exceeded 30 second allotment
 Game.prototype.checkTime = function() {
-    if (this.players.length > 0 && $.now() / 1000 - this.roundStart > 30.0) {
+    if (this.players.length > 0 && $.now() / 1000 - this.roundStart > this.roundLength) {
         $("#song-name").html("You missed '" + this.currentSongName() + "'");
         shake("song-name");
         this.newRound();
     }
     if (this.players.length > 0 && $.now() / 1000 - this.roundStart > 25) {
-        $("#song-name").html(30 - Math.trunc($.now() / 1000 - this.roundStart));
+        $("#song-name").html(this.roundLength - Math.trunc($.now() / 1000 - this.roundStart));
     }
 }
 
