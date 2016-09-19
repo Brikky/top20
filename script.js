@@ -3,20 +3,40 @@
 //include download/play/buy button
 
 function shake(elementID) {
-        var div = document.getElementById(elementID);
-        var interval = 100;
-        var distance = 10;
-        var times = 4;
+    var div = document.getElementById(elementID);
+    var interval = 100;
+    var distance = 10;
+    var times = 4;
 
-        $(div).css('position', 'relative');
+    $(div).css('position', 'relative');
 
-        for (var iter = 0; iter < (times + 1) ; iter++) {
-            $(div).animate({
-                left: ((iter % 2 == 0 ? distance : distance * -1))
-            }, interval);
-        }
-        $(div).animate({ left: 0 }, interval);
+    for (var iter = 0; iter < (times + 1); iter++) {
+        $(div).animate({
+            left: ((iter % 2 == 0 ? distance : distance * -1))
+        }, interval);
     }
+    $(div).animate({
+        left: 0
+    }, interval);
+}
+
+function bounce(elementID) {
+    var div = document.getElementById(elementID);
+    var interval = 100;
+    var distance = 10;
+    var times = 4;
+
+    $(div).css('position', 'relative');
+
+    for (var iter = 0; iter < (times + 1); iter++) {
+        $(div).animate({
+            top: ((iter % 2 == 0 ? distance : distance * -1))
+        }, interval);
+    }
+    $(div).animate({
+        top: 0
+    }, interval);
+}
 
 //Song Constructor
 function Song(options) {
@@ -87,13 +107,15 @@ Game.prototype.currentSongName = function() {
 //Cleans up player's guess and song name and searches for name in guess
 Game.prototype.checkGuess = function() {
     if (this.players.length > 0) {
+        var cleanedSong = (this.currentSongName()).replace(/\s*\(.*?\)\s*/g, '')
+        //removes secondary song titles in parenthesis
+        cleanedSong = (cleanedSong).replace(/[^\w\s]|_/g, "");
         var cleanedGuess = ($('#song-guess').val()).replace(/[^\w\s]|_/g, "");
-        var cleanedSong = (this.currentSongName()).replace(/[^\w\s]|_/g, "");
         //removes punctuation
-
-        cleanedSong = cleanedSong.replace(/feat. *$/, "")
-            //removes anything after "feat. "
-
+        cleanedSong = cleanedSong.replace(/feat.*$/g, "");
+        //removes anything after "feat. "
+        cleanedSong = cleanedSong.trim();
+        //removes leading and trailing whitespace
         return (new RegExp(cleanedSong, "i").test(cleanedGuess));
         //ignores case
     }
@@ -128,6 +150,7 @@ Game.prototype.handleRound = function() {
         if (this.checkGuess() && this.roundTime <= 30.0) {
             (this.currentPlayer()).incrementScore(); //WINNER
             $("#song-name").html(this.currentWinStatement());
+            bounce("song-name");
             this.newRound();
         } else if (this.roundTime > 30.0) {
             this.newRound();
@@ -153,10 +176,8 @@ Game.prototype.prepareGame = function() {
     $("#song-guess").val("");
     $("#song-guess").focus();
     $("#song-guess").attr("placeholder", "guess the song name");
-    console.log('my game', myGame);
     this.songs = this.songs.shuffle();
     $("#song-element").attr("src", this.currentSong()["preview_url"]);
-    console.log(this.currentSong()["preview_url"])
     $("#visualizer").show();
     this.roundStart = $.now() / 1000;
     $("#song-name").html("You have 30 seconds for each song.");
@@ -169,8 +190,8 @@ Game.prototype.checkTime = function() {
         shake("song-name");
         this.newRound();
     }
-    if (this.players.length > 0 && $.now() / 1000 - this.roundStart >25){
-        $("#song-name").html(30 - Math.trunc($.now()/1000 - this.roundStart));
+    if (this.players.length > 0 && $.now() / 1000 - this.roundStart > 25) {
+        $("#song-name").html(30 - Math.trunc($.now() / 1000 - this.roundStart));
     }
 }
 
@@ -218,7 +239,7 @@ $.ajax({
             myGame.songs = spotifyJSON.tracks.items;
         }
     })
-  //Returns                    Data Type
+    //Returns                    Data Type
     //Object                   Object
     //|->Tracks                Object
     //|-->items                Array
