@@ -2,39 +2,43 @@
 //store score in local memory
 //include download/play/buy button
 
+function reload() {
+    window.location.reload();
+}
+
 //animation functions
 function shake(elementID) {
-    var div = document.getElementById(elementID);
+    var element = document.getElementById(elementID);
     var interval = 100;
     var distance = 10;
     var times = 4;
 
-    $(div).css('position', 'relative');
+    this.$(element).css('position', 'relative');
 
-    for (var iter = 0; iter < (times + 1); iter++) {
-        $(div).animate({
-            left: ((iter % 2 == 0 ? distance : distance * -1))
+    for (var i = 0; i < (times + 1); i++) {
+        this.$(element).animate({
+            left: ((i % 2 == 0 ? distance : distance * -1))
         }, interval);
     }
-    $(div).animate({
+    this.$(element).animate({
         left: 0
     }, interval);
 }
 
 function bounce(elementID) {
-    var div = document.getElementById(elementID);
+    var element = document.getElementById(elementID);
     var interval = 100;
     var distance = 10;
     var times = 4;
 
-    $(div).css('position', 'relative');
+    this.$(element).css('position', 'relative');
 
-    for (var iter = 0; iter < (times + 1); iter++) {
-        $(div).animate({
-            top: ((iter % 2 == 0 ? distance : distance * -1))
+    for (var i = 0; i < (times + 1); i++) {
+        this.$(element).animate({
+            top: ((i % 2 == 0 ? distance : distance * -1))
         }, interval);
     }
-    $(div).animate({
+    this.$(element).animate({
         top: 0
     }, interval);
 }
@@ -50,13 +54,14 @@ function Player(name = "") {
     this.name = name;
     this.guess = "";
     this.score = 0;
+    this.$score_value = $("#score-value");
 };
 
 //Game Constructor
 function Game(playerObjectArray, songObjectArray) {
-    this.roundLength = 30;
+    this.maxRoundLength = 30;
     this.roundCount = 0;
-    this.roundStart = $.now() / 1000;
+    this.roundStart = this.now();
     this.roundTime = 0;
     this.players = playerObjectArray || [];
     this.songs = songObjectArray || [];
@@ -80,44 +85,63 @@ function Game(playerObjectArray, songObjectArray) {
         "DANCE BREAK",
         "Me 'What's your number?' You: 'Number 1.'",
         "Annie are you OK?!" //20
-    ]
+    ].shuffle();
+
 };
 
 //GAME METHODS
+
+Game.prototype.cacheDom = function() {
+    this.$document = $(document);
+    this.$display = this.$document.find("#display");
+    this.$audio = this.$document.find("audio");
+    this.$song_guess = this.$document.find("#song-guess");
+    this.$start_button = this.$document.find("#start");
+    this.$restart_button = this.$document.find("#restart");
+    this.$visualizer = this.$document.find("#visualizer");
+}
+
 Game.prototype.currentPlayer = function() {
     return this.players[this.roundCount % this.players.length];
 }
 
-//Returns the win statement for current round
 //Note: game.roundCount should be iterated to get the next item
 Game.prototype.currentWinStatement = function() {
     return this.winStatements[this.roundCount % this.winStatements.length];
 }
 
-//Returns the song for current round
 //Note: game.roundCount should be iterated to get the next item
 Game.prototype.currentSong = function() {
     return this.songs[this.roundCount % this.songs.length];
 }
 
-//Returns the song name for current round
 //Note: game.roundCount should be iterated to get the next item
 Game.prototype.currentSongName = function() {
     return this.currentSong()["name"];
 }
 
-//Cleans up player's guess and song name and searches for name in guess
+Game.prototype.cleanString = function(string) {
+    var cleanedString = string.replace(/\s*\(.*?\)\s*/g, '');
+    //removes secondary song titles in parenthesis
+
+    cleanedString = cleanedString.replace(/[^\w\s]|_/g, "");
+    //removes punctuation
+
+    cleanedString = cleanedString.replace(/feat.*this.$/g, "");
+    //removes anything after "feat. "
+
+    cleanedString = cleanedString.trim();
+    //removes leading and trailing whitespace
+
+    return cleanedString;
+}
+
 Game.prototype.checkGuess = function() {
     if (this.players.length > 0) {
-        var cleanedSong = (this.currentSongName()).replace(/\s*\(.*?\)\s*/g, '')
-            //removes secondary song titles in parenthesis
-        cleanedSong = (cleanedSong).replace(/[^\w\s]|_/g, "");
-        var cleanedGuess = ($('#song-guess').val()).replace(/[^\w\s]|_/g, "");
-        //removes punctuation
-        cleanedSong = cleanedSong.replace(/feat.*$/g, "");
-        //removes anything after "feat. "
-        cleanedSong = cleanedSong.trim();
-        //removes leading and trailing whitespace
+
+        var cleanedSong = this.cleanString(this.currentSongName());
+        var cleanedGuess = this.cleanString(this.$song_guess.val());
+
         console.log(cleanedSong);
         return (new RegExp(cleanedSong, "i").test(cleanedGuess));
         //ignores case
@@ -132,32 +156,36 @@ Game.prototype.checkEnd = function() {
 //Ends game if final song has been reached, updates view
 Game.prototype.endGame = function() {
     if (this.checkEnd()) {
-        $("#song-name").html(this.currentWinStatement());
-        $("#song-element").attr("src", "#");
-        $("#song-guess").hide();
-        $("#restart").show();
-        $("#visualizer").hide();
+        this.$display.html(this.currentWinStatement());
+        this.$audio.attr("src", "#");
+        this.$song_guess.hide();
+        this.$visualizer.hide();
+        this.$restart_button.show();
         clearInterval(endInterval);
         clearInterval(timeInterval);
+        this.$restart_button.on("click touchstart", reload);
     }
 }
 
-//Handles logic for one 30 second round
-//While there is at least one player, check the guess on keyup
-//the window has an interval to check if the timer has expired
-//which prevents the user from getting stuck if they don't know
-//the song and don't press any keys
+Game.prototype.handleCorrect = function() {
+    this.currentPlayer().incrementScore();
+    this.$display.html(this.currentWinStatement());
+    bounce("song-name");
+}
+
+Game.prototype.handleMissed = function() {
+    this.$display.html("You missed '" + this.currentSongName() + "'");
+    shake("song-name");
+}
+
 Game.prototype.handleRound = function() {
-    if (this.players.length > 0) {
-        this.roundTime = $.now() / 1000 - this.roundStart;
-        if (this.checkGuess() && this.roundTime <= this.roundLength) {
-            (this.currentPlayer()).incrementScore(); //WINNER
-            $("#song-name").html(this.currentWinStatement());
-            bounce("song-name");
-            this.newRound();
-        } else if (this.roundTime > this.roundLength) {
-            this.newRound();
-        }
+    this.roundTime = this.getRoundLength();
+    if (this.checkGuess() && this.roundTime <= this.maxRoundLength) {
+        this.handleCorrect();
+        this.newRound();
+    } else if (this.roundTime > this.maxRoundLength) {
+        this.handleMissed();
+        this.newRound();
     }
 }
 
@@ -165,36 +193,50 @@ Game.prototype.handleRound = function() {
 //updates view
 Game.prototype.newRound = function() {
     this.roundCount++;
-    this.roundStart = $.now() / 1000;
-    $("#song-guess").val("");
-    $("#song-element").attr("src", myGame.currentSong()["preview_url"]);
-
+    this.roundStart = this.now();
+    this.$song_guess.val("");
+    this.$audio.attr("src", myGame.currentSong()["preview_url"]);
 };
 
 //updates view to pre-game state, initalizes player
-Game.prototype.prepareGame = function() {
-    this.players.push(new Player($("#song-guess").val()));
-    this.winStatements = this.winStatements.shuffle();
-    $("#start").hide();
-    $("#song-guess").val("");
-    $("#song-guess").focus();
-    $("#song-guess").attr("placeholder", "guess the song name");
-    this.songs = this.songs.shuffle();
-    $("#song-element").attr("src", this.currentSong()["preview_url"]);
-    $("#visualizer").show();
-    this.roundStart = $.now() / 1000;
-    $("#song-name").html("You have " + this.roundLength + " seconds for each song.");
+Game.prototype.beginGame = function() {
+    this.$document.on('keyup', this.handleRound.bind(myGame));
+    this.players.push(new Player(this.$song_guess.val()));
+    this.$start_button.hide();
+    this.$song_guess.val("");
+    this.$song_guess.focus();
+    this.$song_guess.attr("placeholder", "guess the song name");
+    this.$audio.attr("src", this.currentSong()["preview_url"]);
+    this.$visualizer.show();
+    this.roundStart = this.now();
+    this.$display.html("You have " + this.maxRoundLength + " seconds for each song.");
 }
 
-//background function to check if time has exceeded 30 second allotment
+Game.prototype.initialize = function() {
+    this.$start_button.on("click touchstart", myGame.beginGame.bind(myGame));
+    this.$restart_button.hide();
+    this.$visualizer.hide();
+}
+
 Game.prototype.checkTime = function() {
-    if (this.players.length > 0 && $.now() / 1000 - this.roundStart > this.roundLength) {
-        $("#song-name").html("You missed '" + this.currentSongName() + "'");
-        shake("song-name");
+    if (this.getRoundLength() > this.maxRoundLength) {
+        this.handleMissed();
         this.newRound();
     }
-    if (this.players.length > 0 && $.now() / 1000 - this.roundStart > 25) {
-        $("#song-name").html(this.roundLength - Math.trunc($.now() / 1000 - this.roundStart));
+    if (this.getRoundLength() > 25) {
+        this.$display.html(this.maxRoundLength - Math.trunc(this.getRoundLength()));
+    }
+}
+
+Game.prototype.now = function() {
+    return $.now() / 1000;
+}
+
+Game.prototype.getRoundLength = function() {
+    if (this.players.length > 0) {
+        return this.now() - this.roundStart;
+    } else {
+        return -1;
     }
 }
 
@@ -202,7 +244,7 @@ Game.prototype.checkTime = function() {
 //Increments player.score and updates view
 Player.prototype.incrementScore = function() {
     this.score++;
-    $('#score-value').html(this.score);
+    this.$score_value.html(this.score);
 }
 
 //Array method to shuffle items using built in RNG
@@ -235,14 +277,15 @@ Array.prototype.shuffle = function() {
 //#########################################################
 
 var myGame = new Game();
-$.ajax({
+
+this.$.ajax({
         type: "GET",
         url: "https://api.spotify.com/v1/search?q=year:2016&type=track",
         success: function(spotifyJSON) {
-            myGame.songs = spotifyJSON.tracks.items;
+            myGame.songs = spotifyJSON.tracks.items.shuffle();
         }
     })
-    //Returns                    Data Type
+    //Returns                  Data Type
     //Object                   Object
     //|->Tracks                Object
     //|-->items                Array
@@ -250,30 +293,13 @@ $.ajax({
     //|---->name               String (*Song Name)
     //|---->preview_url        String (*30 second clip)
 
-//Hide graphics that are used later
-$("#visualizer").hide();
-$("#restart").hide();
-
 //Set background processes to check for user loss by timeout and by progression
 //This makes both of these processes occur independantly of user input despite
-//the game relying on event listeners for instantiation and winning progression
+//the game relying on event listeners for progression
 var timeInterval = setInterval(myGame.checkTime.bind(myGame), 100);
 var endInterval = setInterval(myGame.endGame.bind(myGame), 100);
 
-
 $(document).ready(function() {
-    //Event listeners to begin game, play game, and restart game
-    $("#start").on("click touchstart", myGame.prepareGame.bind(myGame));
-    $(document).on('keyup', myGame.handleRound.bind(myGame));
-    $("#restart").on("click touchstart", function() {
-        window.location.reload();
-    });
-
-
-    //
-    //PLAY HERE
-    //
-
-    //</>PLAYGROUND
-
+    myGame.cacheDom();
+    myGame.initialize();
 });
