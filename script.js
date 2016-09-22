@@ -121,16 +121,14 @@ Game.prototype.currentSongName = function() {
 }
 
 Game.prototype.cleanString = function(string) {
-    var cleanedString = string.replace(/\s*\(.*?\)\s*/g, '');
-    //removes secondary song titles in parenthesis
-
-    cleanedString = cleanedString.replace(/[^\w\s]|_/g, "");
-    //removes punctuation
-
-    cleanedString = cleanedString.replace(/feat.*this.$/g, "");
-    //removes anything after "feat. "
-
-    cleanedString = cleanedString.trim();
+    var cleanedString = string
+        .replace(/\s*\(.*?\)\s*/g, '')
+        //removes secondary song titles in parenthesis
+        .replace(/[^\w\s]|_/g, "")
+        //removes punctuation
+        .replace(/feat.*this.$/g, "")
+        //removes anything after "feat. "
+    cleanedString.trim();
     //removes leading and trailing whitespace
 
     return cleanedString;
@@ -138,7 +136,6 @@ Game.prototype.cleanString = function(string) {
 
 Game.prototype.checkGuess = function() {
     if (this.players.length > 0) {
-
         var cleanedSong = this.cleanString(this.currentSongName());
         var cleanedGuess = this.cleanString(this.$song_guess.val());
 
@@ -170,12 +167,12 @@ Game.prototype.endGame = function() {
 Game.prototype.handleCorrect = function() {
     this.currentPlayer().incrementScore();
     this.$display.html(this.currentWinStatement());
-    bounce("song-name");
+    bounce("display");
 }
 
 Game.prototype.handleMissed = function() {
     this.$display.html("You missed '" + this.currentSongName() + "'");
-    shake("song-name");
+    shake("display");
 }
 
 Game.prototype.handleRound = function() {
@@ -195,12 +192,12 @@ Game.prototype.newRound = function() {
     this.roundCount++;
     this.roundStart = this.now();
     this.$song_guess.val("");
-    this.$audio.attr("src", myGame.currentSong()["preview_url"]);
+    this.$audio.attr("src", this.currentSong()["preview_url"]);
 };
 
 //updates view to pre-game state, initalizes player
 Game.prototype.beginGame = function() {
-    this.$document.on('keyup', this.handleRound.bind(myGame));
+    this.$document.on('keyup', this.handleRound.bind(this));
     this.players.push(new Player(this.$song_guess.val()));
     this.$start_button.hide();
     this.$song_guess.val("");
@@ -213,9 +210,20 @@ Game.prototype.beginGame = function() {
 }
 
 Game.prototype.initialize = function() {
-    this.$start_button.on("click touchstart", myGame.beginGame.bind(myGame));
+    var Game = this;
+    this.cacheDom();
+    this.$start_button.on("click touchstart", this.beginGame.bind(this));
     this.$restart_button.hide();
     this.$visualizer.hide();
+    var timeInterval = setInterval(this.checkTime.bind(this), 100);
+    var endInterval = setInterval(this.endGame.bind(this), 100);
+    $.ajax({
+        type: "GET",
+        url: "https://api.spotify.com/v1/search?q=year:2016&type=track",
+        success: function(spotifyJSON) {
+            Game.songs = spotifyJSON.tracks.items.shuffle();
+        }
+    })
 }
 
 Game.prototype.checkTime = function() {
@@ -268,38 +276,3 @@ Array.prototype.shuffle = function() {
 
     return this;
 }
-
-//#########################################################
-//################# ___ ___ ___ ___ _  _###################
-//################ | _ ) __/ __|_ _| \| |##################
-//################ | _ \ _| (_ || || .` |##################
-//################ |___/___\___|___|_|\_|##################
-//#########################################################
-
-var myGame = new Game();
-
-this.$.ajax({
-        type: "GET",
-        url: "https://api.spotify.com/v1/search?q=year:2016&type=track",
-        success: function(spotifyJSON) {
-            myGame.songs = spotifyJSON.tracks.items.shuffle();
-        }
-    })
-    //Returns                  Data Type
-    //Object                   Object
-    //|->Tracks                Object
-    //|-->items                Array
-    //|--->[0-20]              Object
-    //|---->name               String (*Song Name)
-    //|---->preview_url        String (*30 second clip)
-
-//Set background processes to check for user loss by timeout and by progression
-//This makes both of these processes occur independantly of user input despite
-//the game relying on event listeners for progression
-var timeInterval = setInterval(myGame.checkTime.bind(myGame), 100);
-var endInterval = setInterval(myGame.endGame.bind(myGame), 100);
-
-$(document).ready(function() {
-    myGame.cacheDom();
-    myGame.initialize();
-});
