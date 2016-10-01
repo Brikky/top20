@@ -50,8 +50,8 @@ function Song(options) {
 };
 
 //Player Constructor
-function Player(name = "") {
-    this.name = name;
+function Player(name) {
+    this.name = name || "";
     this.guess = "";
     this.score = 0;
     this.$score_value = $("#score-value");
@@ -126,8 +126,8 @@ Game.prototype.cleanString = function(string) {
         //removes secondary song titles in parenthesis
         .replace(/[^\w\s]|_/g, "")
         //removes punctuation
-        .replace(/feat.*this.$/g, "")
-        //removes anything after "feat. "
+        .replace(/feat.*this.$/g, "");
+    //removes anything after "feat. "
     cleanedString.trim();
     //removes leading and trailing whitespace
 
@@ -158,8 +158,6 @@ Game.prototype.endGame = function() {
         this.$song_guess.hide();
         this.$visualizer.hide();
         this.$restart_button.show();
-        clearInterval(endInterval);
-        clearInterval(timeInterval);
         this.$restart_button.on("click touchstart", reload);
     }
 }
@@ -215,8 +213,8 @@ Game.prototype.initialize = function() {
     this.$start_button.on("click touchstart", this.beginGame.bind(this));
     this.$restart_button.hide();
     this.$visualizer.hide();
-    var timeInterval = setInterval(this.checkTime.bind(this), 100);
-    var endInterval = setInterval(this.endGame.bind(this), 100);
+    setInterval(this.checkTime.bind(this), 100);
+    setInterval(this.endGame.bind(this), 100);
     $.ajax({
         type: "GET",
         url: "https://api.spotify.com/v1/search?q=year:2016&type=track",
@@ -226,12 +224,20 @@ Game.prototype.initialize = function() {
     })
 }
 
+Game.prototype.isLastRound = function() {
+    return this.roundCount > 0 && (this.roundCount + 1) != this.songs.length;
+}
+
+Game.prototype.isRoundOver = function() {
+    return this.getRoundLength() > this.maxRoundLength;
+}
+
+
 Game.prototype.checkTime = function() {
-    if (this.getRoundLength() > this.maxRoundLength) {
+    if (!this.isLastRound() && this.isRoundOver()) {
         this.handleMissed();
         this.newRound();
-    }
-    if (this.getRoundLength() > 25) {
+    } else if (!this.isLastRound() && this.getRoundLength() > 25) {
         this.$display.html(this.maxRoundLength - Math.trunc(this.getRoundLength()));
     }
 }
