@@ -24,7 +24,7 @@ ____
 
 ### Code Sample
 ___
-```
+```JavaScript
 Game.prototype.cleanString = function(string) {
     var cleanedString = string
         .replace(/\s*\(.*?\)\s*/g, '')
