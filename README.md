@@ -1,11 +1,20 @@
-# [Top 20](bitly.com/playtop20)
+## Top 20
+___
+Interactive game where the user guesses the name of today's 20 hottest Spotify songs. 
+Designed and developed over weekend sprint.
 
-![Top 20 Game](http://i.imgur.com/usqRk5z.png)
+## URL: [http://bricky.tech/top20/](bricky.tech/top20/)
 
-## URL: [bitly.com/playtop20](bitly.com/playtop20)
+### Features
+___
+* Dynamically gathers top 20 songs from Spotify
+* Player guesses are dynamically checked - no need to press enter!
+* Player guesses and song names are stripped of punctuation before being compared
+* Secondary song names and featuring lines are not required for a correct answer
+* Songs autoprogress after correct guess or 30 seconds
 
-## Technologies Used
-
+### Technologies Used
+____
 - HTML
 - CSS
   - Animation w/ Keyframes
@@ -13,10 +22,14 @@
 - Jquery
 - Spotify's Web API
 
-## Future Work
-
+### Future Work
+___
 1. Allow players to pick a genre of music
 2. Maintain high score over time
 3. Social sharing of scores
 4. 'Discover' mode, which uses songs lower in popularity
 5. Affiliate links to purchase albums/songs
+
+### Screenshots
+___
+![Top 20 Game](http://i.imgur.com/usqRk5z.png)
