@@ -27,15 +27,11 @@ ___
 ```JavaScript
 Game.prototype.cleanString = function(string) {
     var cleanedString = string
-        .replace(/\s*\(.*?\)\s*/g, '')
-        //removes secondary song titles in parenthesis
-        .replace(/[^\w\s]|_/g, "")
-        //removes punctuation
-        .replace(/feat.*this.$/g, "");
-        //removes anything after "feat. "
-    cleanedString.trim();
-    //removes leading and trailing whitespace
-
+        .replace(/\s*\(.*?\)\s*/g, '')  //removes secondary song titles in parenthesis
+        .replace(/[^\w\s]|_/g, "")      //removes punctuation
+        .replace(/feat.*this.$/g, "")   //removes anything after "feat. "
+        .trim();                        //removes leading and trailing whitespace
+    
     return cleanedString;
 }
 ```
