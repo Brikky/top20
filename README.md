@@ -32,7 +32,7 @@ Game.prototype.cleanString = function(string) {
         .replace(/[^\w\s]|_/g, "")
         //removes punctuation
         .replace(/feat.*this.$/g, "");
-    //removes anything after "feat. "
+        //removes anything after "feat. "
     cleanedString.trim();
     //removes leading and trailing whitespace
 
