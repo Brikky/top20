@@ -3,7 +3,7 @@ ___
 Interactive game where the user guesses the name of today's 20 hottest Spotify songs. 
 Designed and developed over weekend sprint.
 
-### URL: [http://bricky.tech/top20/](bricky.tech/top20/)
+### URL: [bricky.tech/top20/](http://bricky.tech/top20/)
 
 ### Features
 ___
